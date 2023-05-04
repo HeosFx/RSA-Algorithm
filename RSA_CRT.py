@@ -9,6 +9,33 @@ import binascii
 import hashlib
 
 
+def home_crt(c, q, p, d, n):  # q < p
+    # c: le message chiffré
+    # q: le premier facteur de n
+    # p: le deuxième facteur de n
+    # d: l'exposant privé
+    # n: le modulo
+    #
+    # Retourne le message déchiffré
+
+    # Verification q < p
+    if q > p:
+        q, p = p, q
+
+    q_inv = home_ext_euclide(n, q)
+
+    d_q = d % (q - 1)
+    d_p = d % (p - 1)
+
+    m_q = home_mod_exponent(c, d_q, q)
+    m_p = home_mod_exponent(c, d_p, p)
+
+    h = ((m_p - m_q) * q_inv) % p
+    m = (m_q + h * q) % n
+
+    return m
+
+
 def home_mod_exponent(x, y, n):  # exponentiation modulaire
     # x: le nombre à multiplier
     # y: la puissance
@@ -141,7 +168,9 @@ x = input("appuyer sur entrer")
 print("*******************************************************************")
 
 print("Alice déchiffre le message chiffré \n", chif, "\nce qui donne ")
-dechif = home_int_to_string(home_mod_exponent(chif, da, na))
+
+# On utilise le Théorème du Reste Chinois pour déchiffrer le message de Bob
+dechif = home_int_to_string(home_crt(chif, x1a, x2a, da, na))
 print(dechif)
 
 print("*******************************************************************")
