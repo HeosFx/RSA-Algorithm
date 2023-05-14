@@ -87,9 +87,9 @@ def home_int_to_string(x):  # pour transformer un int en string
 
 
 def mot10char():  # entrer le secret
-    secret = input("donner un secret de 65 caractères au maximum : ")
-    while len(secret) > 65:
-        secret = input("c'est beaucoup trop long, 10 caractères S.V.P : ")
+    secret = input("donner un secret : ")
+    while len(secret) == 0:
+        secret = input("c'est beaucoup trop court, donner un secret : ")
     return secret
 
 #Initialisation du generateur aleatoire
